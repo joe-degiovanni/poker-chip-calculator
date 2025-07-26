@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Poker Chip Optimizer</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<main>
+  <h1>Poker Chip Optimizer</h1>
+  <form id="chipForm">
+    <label>Number of Players:
+      <input type="number" id="players" min="2" value="6" required>
+    </label>
+    <label>Starting Money per Player ($):
+      <input type="number" id="startingMoney" min="1" value="50" required>
+    </label>
+    <label>Small Blind ($):
+      <input type="number" id="smallBlind" value="0.25" step="0.01" required>
+    </label>
+    <fieldset>
+      <legend>Total Avaliable Chip Counts</legend>
+      <label>White Chips:
+        <input type="number" id="white" min="0" value="100" required>
+      </label>
+      <label>Red Chips:
+        <input type="number" id="red" min="0" value="50" required>
+      </label>
+      <label>Green Chips:
+        <input type="number" id="green" min="0" value="50" required>
+      </label>
+      <label>Black Chips:
+        <input type="number" id="black" min="0" value="50" required>
+      </label>
+      <label>Blue Chips:
+        <input type="number" id="blue" min="0" value="50" required>
+      </label>
+    </fieldset>
+    <button type="submit">Calculate</button>
+  </form>
+  <section id="results"></section>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
