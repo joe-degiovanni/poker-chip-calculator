@@ -10,33 +10,34 @@
 <main>
   <h1>Poker Chip Optimizer</h1>
   <form id="chipForm">
-    <label>Number of Players:
-      <input type="number" id="players" min="2" value="6" required>
-    </label>
-    <label>Starting Money per Player ($):
-      <input type="number" id="startingMoney" min="1" value="50" required>
-    </label>
-    <label>Small Blind ($):
-      <input type="number" id="smallBlind" value="0.25" step="0.01" required>
-    </label>
     <fieldset>
       <legend>Total Avaliable Chip Counts</legend>
-      <label>White Chips:
-        <input type="number" id="white" min="0" value="100" required>
-      </label>
-      <label>Red Chips:
-        <input type="number" id="red" min="0" value="50" required>
-      </label>
-      <label>Green Chips:
-        <input type="number" id="green" min="0" value="50" required>
-      </label>
-      <label>Black Chips:
-        <input type="number" id="black" min="0" value="50" required>
-      </label>
-      <label>Blue Chips:
-        <input type="number" id="blue" min="0" value="50" required>
-      </label>
+      <p>How many of each color poker chips do you have total for your game?</p>
+      <div class="chip-count-inputs">
+        <label>White ⚪ </label>
+        <input type="number" id="white" min="0" value="100" placeholder="150" required>
+
+        <label>Red 🔴 </label>
+        <input type="number" id="red" min="0" value="50" placeholder="150" required>
+
+        <label>Green 🟢 </label>
+        <input type="number" id="green" min="0" value="50" placeholder="150" required>
+
+        <label>Black ⚫ </label>
+        <input type="number" id="black" min="0" value="50" placeholder="150" required>
+
+        <label>Blue 🔵 </label>
+        <input type="number" id="blue" min="0" value="50" placeholder="150" required>
+      </div>
     </fieldset>
+    <div class="game-settings">
+      <label>Number of Players:</label>
+      <input type="number" id="players" min="2" value="6" required><br/>
+      <label>Starting Money per Player ($):</label>
+      <input type="number" id="startingMoney" min="1" value="50" required><br/>
+      <label>Small Blind ($):</label>
+      <input type="number" id="smallBlind" value="0.25" step="0.01" required><br/>
+    </div>
     <button type="submit">Calculate</button>
   </form>
   <section id="results"></section>

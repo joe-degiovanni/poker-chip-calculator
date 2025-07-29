@@ -14,6 +14,7 @@
 html {
   color: #222;
   font-size: 1em;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   line-height: 1.4;
 }
 
@@ -167,81 +168,70 @@ textarea {
    Modify as content requires.
    ========================================================================== */
 
-@media only screen and (min-width: 35em) {
-  /* Style adjustments for viewports that meet the condition */
+@media (max-width: 1200px) {
+  main {
+    width: 100%;
+  }
+}
+@media (min-width: 1201px) {
+  main {
+    width: 1200px;
+  }
 }
 
-@media print,
-  (-webkit-min-device-pixel-ratio: 1.25),
-  (min-resolution: 1.25dppx),
-  (min-resolution: 120dpi) {
-  /* Style adjustments for high resolution devices */
+main {
+  margin: auto;
+  background-color: #888888;
 }
 
-/* ==========================================================================
-   Print styles.
-   Inlined to avoid the additional HTTP request:
-   https://www.phpied.com/delay-loading-your-print-css/
-   ========================================================================== */
-
-@media print {
-  *,
-  *::before,
-  *::after {
-    background: #fff !important;
-    color: #000 !important;
-    /* Black prints faster */
-    box-shadow: none !important;
-    text-shadow: none !important;
+legend {
+  font-weight: bold;
+  text-align: center;
+}
+fieldset .chip-count-inputs {
+  display: grid;
+  input {
+    padding: 5px;
   }
-
-  a,
-  a:visited {
-    text-decoration: underline;
+  label {
+    text-align: center;
+    white-space: nowrap;
   }
-
-  a[href]::after {
-    content: " (" attr(href) ")";
+  @media (max-width: 1200px) {
+    label {
+      text-align: right;
+      margin-right: 10px;
+    }
+    grid-template-columns: 1fr 1fr;
   }
-
-  abbr[title]::after {
-    content: " (" attr(title) ")";
+  @media (min-width: 1201px) {
+    input{
+      margin-left: 5px;
+    }
+    grid-template-columns: repeat(12, 100px);
   }
+}
 
-  /*
-   * Don't show links that are fragment identifiers,
-   * or use the `javascript:` pseudo protocol
-   */
-  a[href^="#"]::after,
-  a[href^="javascript:"]::after {
-    content: "";
-  }
+button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
 
-  pre {
-    white-space: pre-wrap !important;
-  }
+button:hover {
+  background-color: #45a049;
+}
 
-  pre,
-  blockquote {
-    border: 1px solid #999;
-    page-break-inside: avoid;
-  }
-
-  tr,
-  img {
-    page-break-inside: avoid;
-  }
-
-  p,
-  h2,
-  h3 {
-    orphans: 3;
-    widows: 3;
-  }
-
-  h2,
-  h3 {
-    page-break-after: avoid;
-  }
+/* animate the button on click */
+button:active {
+  transform: scale(0.98);
+  transition: transform 0.1s ease-in-out;
 }
 
