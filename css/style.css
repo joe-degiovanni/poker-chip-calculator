@@ -179,6 +179,12 @@ textarea {
   }
 }
 
+body {
+  background-color: black;
+  margin: 0;
+  padding: 20px;
+}
+
 main {
   margin: auto;
   background-color: #888888;
@@ -188,6 +194,17 @@ legend {
   font-weight: bold;
   text-align: center;
 }
+
+.game-settings {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  width: 80%;
+  label {
+    text-align: right;
+    margin-right: 10px;
+  }
+}
+
 fieldset .chip-count-inputs {
   display: grid;
   input {
@@ -198,11 +215,12 @@ fieldset .chip-count-inputs {
     white-space: nowrap;
   }
   @media (max-width: 1200px) {
+    width: 80%;
     label {
       text-align: right;
       margin-right: 10px;
     }
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 2fr;
   }
   @media (min-width: 1201px) {
     input{
@@ -210,6 +228,12 @@ fieldset .chip-count-inputs {
     }
     grid-template-columns: repeat(12, 100px);
   }
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 }
 
 button {
@@ -221,7 +245,7 @@ button {
   text-decoration: none;
   display: inline-block;
   font-size: 16px;
-  margin: 4px 2px;
+  margin: auto;
   cursor: pointer;
 }
 

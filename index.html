@@ -9,6 +9,7 @@
 <body>
 <main>
   <h1>Poker Chip Optimizer</h1>
+  <hr/>
   <form id="chipForm">
     <fieldset>
       <legend>Total Avaliable Chip Counts</legend>
@@ -30,16 +31,21 @@
         <input type="number" id="blue" min="0" value="50" placeholder="150" required>
       </div>
     </fieldset>
+    <hr/>
     <div class="game-settings">
       <label>Number of Players:</label>
-      <input type="number" id="players" min="2" value="6" required><br/>
+      <input type="number" id="players" min="2" value="6" required>
       <label>Starting Money per Player ($):</label>
-      <input type="number" id="startingMoney" min="1" value="50" required><br/>
+      <input type="number" id="startingMoney" min="1" value="50" required>
       <label>Small Blind ($):</label>
-      <input type="number" id="smallBlind" value="0.25" step="0.01" required><br/>
+      <input type="number" id="smallBlind" value="0.25" step="0.01" required>
     </div>
+    <hr/>
+    <div class="button-container">
     <button type="submit">Calculate</button>
+    </div>
   </form>
+  <hr/>
   <section id="results"></section>
 </main>
 <script src="js/app.js"></script>
