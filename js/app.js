@@ -1,3 +1,80 @@
+const colors = localStorage.getItem('chipColors') ? JSON.parse(localStorage.getItem('chipColors')) : [];
+if (colors.length === 0) {
+  // initialize with default colors if none are set
+  colors.push("white", "blue", "red", "green", "black");
+  localStorage.setItem('chipColors', JSON.stringify(colors))
+}
+
+const chipCounts = localStorage.getItem('chipCounts') ? JSON.parse(localStorage.getItem('chipCounts')) : {};
+if (Object.keys(chipCounts).length === 0) {
+  // initialize with default counts if none are set
+  colors.forEach(color => chipCounts[color] = 50);
+  localStorage.setItem('chipCounts', JSON.stringify(chipCounts));
+}
+
+
+function buildChipColorCountInputs() {
+  const container = document.getElementById('chipColorCounts');
+  container.innerHTML = ''; // Clear existing inputs
+  colors.forEach(color => {
+    // Create label and input for each color
+    const label = document.createElement('label');
+    label.htmlFor = `count-${color}`;
+    label.textContent = color.charAt(0).toUpperCase() + color.slice(1);
+    label.style.color = color; // Set label color to match chip color
+    label.style.fontWeight = 'bold';
+    label.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.5)';
+
+    // create input element
+    const input = document.createElement('input');
+    input.type = 'number';
+    input.id = `count-${color}`;
+    input.value = chipCounts[color];
+    input.min = 0;
+    input.placeholder = `${color.charAt(0).toUpperCase() + color.slice(1)} Count`;
+    input.addEventListener('change', function () {
+      chipCounts[color] = parseInt(this.value, 10);
+      localStorage.setItem('chipCounts', JSON.stringify(chipCounts));
+    });
+
+    // Append label and input to the container
+    container.appendChild(label);
+    container.appendChild(input);
+
+    // create a delete color button
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.style.marginLeft = '10px';
+    deleteButton.addEventListener('click', function () {
+      const index = colors.indexOf(color);
+      if (index > -1) {
+        colors.splice(index, 1);
+        delete chipCounts[color];
+        localStorage.setItem('chipColors', JSON.stringify(colors));
+        localStorage.setItem('chipCounts', JSON.stringify(chipCounts));
+        buildChipColorCountInputs(); // Rebuild inputs after deletion
+      }
+    });
+    container.appendChild(deleteButton);
+  });
+}
+
+buildChipColorCountInputs();
+
+function addNewColor() {
+  const newColor = document.getElementById('newColor').value.trim().toLowerCase();
+  if (newColor && !colors.includes(newColor)) {
+    colors.push(newColor);
+    chipCounts[newColor] = 50; // Default count for new color
+    localStorage.setItem('chipColors', JSON.stringify(colors));
+    localStorage.setItem('chipCounts', JSON.stringify(chipCounts));
+    buildChipColorCountInputs();
+    document.getElementById('newColor').value = ''; // Clear input field
+  }
+}
+
+document.getElementById('addColorButton').addEventListener('click', addNewColor);
+
 document.getElementById('chipForm').addEventListener('submit', function (e) {
   e.preventDefault();
 
@@ -6,19 +83,6 @@ document.getElementById('chipForm').addEventListener('submit', function (e) {
   const smallBlind = parseFloat(document.getElementById('smallBlind').value);
   const bigBlind = smallBlind * 2;
 
-
-
-  const chipCounts = {
-    white: parseInt(document.getElementById('white').value, 10),
-    blue: parseInt(document.getElementById('blue').value, 10),
-    red: parseInt(document.getElementById('red').value, 10),
-    green: parseInt(document.getElementById('green').value, 10),
-    black: parseInt(document.getElementById('black').value, 10),
-  };
-
-  // sort colors by chip count in descending order
-  const colors = chipCounts ? Object.keys(chipCounts)
-    .sort((a, b) => chipCounts[b] - chipCounts[a]) : [];
 
   // Set chip values based on small blind
   const chipValues = {};
@@ -31,40 +95,21 @@ document.getElementById('chipForm').addEventListener('submit', function (e) {
     chipsPerPlayer[color] = Math.floor(chipCounts[color] / players);
   });
 
-  let colorValuesPerPlayer = {};
-  colors.forEach(color => {
-    colorValuesPerPlayer[color] = chipsPerPlayer[color] * chipValues[color];
-  });
 
   let result = `<p>Small Blind: \$${smallBlind}, Big Blind: \$${bigBlind}</p>`;
-  for (let p = 1; p <= players; p++) {
-    let allocation = {};
-    let valueBreakdown = {};
-    let moneyLeft = startingMoney;
-
-    colors.forEach(color => {
-      let maxChips = Math.min(chipsPerPlayer[color], Math.floor(moneyLeft / chipValues[color]));
-      allocation[color] = maxChips;
-      valueBreakdown[color] = maxChips * chipValues[color];
-      moneyLeft -= valueBreakdown[color];
-    });
-
-    let totalValue = Object.values(valueBreakdown).reduce((a, b) => a + b, 0);
-
-    result += `<h3>Player ${p}</h3>
-      <ul>
-        <li>Black: ${allocation.black} chips (${formatMoney(valueBreakdown.black)} total / ${formatMoney(chipValues.black)} each)</li>
-        <li>Green: ${allocation.green} chips (${formatMoney(valueBreakdown.green)} total / ${formatMoney(chipValues.green)} each)</li>
-        <li>Red: ${allocation.red} chips (${formatMoney(valueBreakdown.red)} total / ${formatMoney(chipValues.red)} each)</li>
-        <li>Blue: ${allocation.blue} chips (${formatMoney(valueBreakdown.blue)} total / ${formatMoney(chipValues.blue)} each)</li>
-        <li>White: ${allocation.white} chips (${formatMoney(valueBreakdown.white)} total / ${formatMoney(chipValues.white)} each)</li>
-        <li><strong>Total Value: ${formatMoney(totalValue)}</strong></li>
-        <li>Unassigned Money: ${formatMoney(moneyLeft)}</li>
-      </ul>`;
-  }
+  result += `<p>Total Chips per Player:</p><ul>`;
+  colors.forEach(color => {
+    result += `<li>
+        ${color.charAt(0).toUpperCase() + color.slice(1)}: ${chipsPerPlayer[color]} chips worth ${formatMoney(chipValues[color])} each
+        (total: ${formatMoney(chipsPerPlayer[color] * chipValues[color])})
+        </li>`;
+  });
+  result += `</ul>`;
+  const totalMoneyPerPlayer = colors.map(color => chipValues[color] * chipsPerPlayer[color]).reduce((a,b) => a + b);
+  result += `<p>Total Money per Player: ${formatMoney(totalMoneyPerPlayer)}</p>`;
   document.getElementById('results').innerHTML = result;
 });
 
 function formatMoney(value) {
-  return value.toLocaleString('en-US', { style: 'currency', currency: 'USD' });
+  return value.toLocaleString('en-US', {style: 'currency', currency: 'USD'});
 }
