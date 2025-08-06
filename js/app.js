@@ -12,6 +12,9 @@ if (Object.keys(chipCounts).length === 0) {
   localStorage.setItem('chipCounts', JSON.stringify(chipCounts));
 }
 
+// sort colors by their chip counts (highest to lowest)
+colors.sort((a, b) => (chipCounts[b] || 0) - (chipCounts[a] || 0));
+
 
 function buildChipColorCountInputs() {
   const container = document.getElementById('chipColorCounts');
@@ -87,7 +90,12 @@ document.getElementById('chipForm').addEventListener('submit', function (e) {
   // Set chip values based on small blind
   const chipValues = {};
   colors.forEach((color, index) => {
-    chipValues[color] = smallBlind * Math.pow(2, index);
+    if (index === 0) {
+      chipValues[color] = smallBlind;
+    } else {
+      let val = chipValues[colors[index - 1]] * Math.min(index + 1, 5);
+      chipValues[color] = val > 1 ? Math.round(val) : val;
+    }
   });
 
   let chipsPerPlayer = {};
@@ -96,18 +104,26 @@ document.getElementById('chipForm').addEventListener('submit', function (e) {
   });
 
 
-  let result = `<p>Small Blind: \$${smallBlind}, Big Blind: \$${bigBlind}</p>`;
-  result += `<p>Total Chips per Player:</p><ul>`;
+  let result = `<p>Small Blind: ${formatMoney(smallBlind)}, Big Blind: ${formatMoney(bigBlind)}</p>`;
+  result += `<p>Chip Values:</p><ul>`;
   colors.forEach(color => {
     result += `<li>
-        ${color.charAt(0).toUpperCase() + color.slice(1)}: ${chipsPerPlayer[color]} chips worth ${formatMoney(chipValues[color])} each
-        (total: ${formatMoney(chipsPerPlayer[color] * chipValues[color])})
+        ${color.charAt(0).toUpperCase() + color.slice(1)}: ${formatMoney(chipValues[color])} each
         </li>`;
   });
   result += `</ul>`;
-  const totalMoneyPerPlayer = colors.map(color => chipValues[color] * chipsPerPlayer[color]).reduce((a,b) => a + b);
-  result += `<p>Total Money per Player: ${formatMoney(totalMoneyPerPlayer)}</p>`;
   document.getElementById('results').innerHTML = result;
+
+  let suggestedDenominations = 'Suggested Chip Denominations (based on small blind): ';
+  suggestedDenominations += colors.map(color => `${color.charAt(0).toUpperCase() + color.slice(1)}: ${formatMoney(chipValues[color])}`).join(', ');
+  document.getElementById('suggested-chip-denominations').innerHTML = suggestedDenominations
+
+  let suggestedChipDistribution = 'Suggested Chip Distribution per Player: <ul>';
+  suggestedChipDistribution += colors.map(color => `<li>
+    ${color.charAt(0).toUpperCase() + color.slice(1)}: ${chipsPerPlayer[color]} chips worth ${formatMoney(chipValues[color])} each (total: ${formatMoney(chipsPerPlayer[color] * chipValues[color])})
+    </li>`).join('\n');
+  suggestedChipDistribution += `<li>Total Money per Player: ${formatMoney(totalMoneyPerPlayer)}</li></ul>`;
+  document.getElementById('suggested-starting-chip-distribution').innerHTML = suggestedChipDistribution;
 });
 
 function formatMoney(value) {
