@@ -4,44 +4,49 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Poker Chip Optimizer</title>
-  <link rel="stylesheet" href="css/style.css">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" media="screen,projection">
+
 </head>
-<body>
-<main>
+<body class="teal">
+<main class="container">
   <h1>Poker Chip Optimizer</h1>
   <hr/>
   <form id="chipForm">
-    <fieldset>
-      <legend>Total Avaliable Chip Counts</legend>
+    <div class="card-panel">
+      <h5>Total Avaliable Chip Counts</h5>
       <p>How many of each color poker chips do you have total for your game?</p>
       <div id="chipColorCounts" class="chip-count-inputs">
-        <label>White ⚪ </label>
+        <label>White </label>
         <input type="number" id="white" min="0" value="100" placeholder="150" required>
 
-        <label>Red 🔴 </label>
+        <label>Red </label>
         <input type="number" id="red" min="0" value="50" placeholder="150" required>
 
-        <label>Green 🟢 </label>
+        <label>Green </label>
         <input type="number" id="green" min="0" value="50" placeholder="150" required>
 
-        <label>Black ⚫ </label>
+        <label>Black </label>
         <input type="number" id="black" min="0" value="50" placeholder="150" required>
 
-        <label>Blue 🔵 </label>
+        <label>Blue </label>
         <input type="number" id="blue" min="0" value="50" placeholder="150" required>
       </div>
-    </fieldset>
-    <select name="newColor" id="newColor">
-      <option value="white">White</option>
-      <option value="red">Red</option>
-      <option value="green">Green</option>
-      <option value="black">Black</option>
-      <option value="blue">Blue</option>
-      <option value="purple">Purple</option>
-    </select>
-    <button type="button" id="addColorButton">Add Chip Color</button>
+      <select name="newColor" id="newColor">
+        <option value="white">White</option>
+        <option value="red">Red</option>
+        <option value="green">Green</option>
+        <option value="black">Black</option>
+        <option value="blue">Blue</option>
+        <option value="purple">Purple</option>
+      </select>
+      <a class="btn-floating btn-large waves-effect waves-light" id="addColorButton"><i class="material-icons">add</i>Add Color</a>
+    </div>
     <hr/>
-    <div class="game-settings">
+    <div class="card-panel game-settings">
       <label>Number of Players:</label>
       <input type="number" id="players" min="2" value="6" required>
       <label>Starting Money per Player ($):</label>
@@ -51,7 +56,7 @@
     </div>
     <hr/>
     <div class="button-container">
-    <button type="submit">Calculate</button>
+    <button class="btn waves-effect waves-light" type="submit">Calculate<i class="material-icons right">send</i></button>
     </div>
   </form>
   <hr/>
@@ -60,5 +65,8 @@
   <section id="suggested-starting-chip-distribution"></section>
 </main>
 <script src="js/app.js"></script>
+
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
 </html>

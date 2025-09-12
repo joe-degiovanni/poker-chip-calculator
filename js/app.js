@@ -18,15 +18,17 @@ colors.sort((a, b) => (chipCounts[b] || 0) - (chipCounts[a] || 0));
 
 function buildChipColorCountInputs() {
   const container = document.getElementById('chipColorCounts');
+  container.className = 'row';
   container.innerHTML = ''; // Clear existing inputs
   colors.forEach(color => {
+    // create a div to hold label, input, and delete button
+    const div = document.createElement('div');
+    div.className = 'col sm6';
+
     // Create label and input for each color
     const label = document.createElement('label');
     label.htmlFor = `count-${color}`;
     label.textContent = color.charAt(0).toUpperCase() + color.slice(1);
-    label.style.color = color; // Set label color to match chip color
-    label.style.fontWeight = 'bold';
-    label.style.textShadow = '1px 1px 2px rgba(0, 0, 0, 0.5)';
 
     // create input element
     const input = document.createElement('input');
@@ -41,13 +43,13 @@ function buildChipColorCountInputs() {
     });
 
     // Append label and input to the container
-    container.appendChild(label);
-    container.appendChild(input);
+    div.appendChild(label);
+    div.appendChild(input);
 
     // create a delete color button
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete';
-    deleteButton.style.marginLeft = '10px';
+    const deleteButton = document.createElement('a');
+    deleteButton.innerHTML = '<i class="material-icons">remove</i>';
+    deleteButton.className = 'btn-floating btn-small red lighten-3';
     deleteButton.addEventListener('click', function () {
       const index = colors.indexOf(color);
       if (index > -1) {
@@ -58,7 +60,8 @@ function buildChipColorCountInputs() {
         buildChipColorCountInputs(); // Rebuild inputs after deletion
       }
     });
-    container.appendChild(deleteButton);
+    div.appendChild(deleteButton);
+    container.appendChild(div);
   });
 }
 
