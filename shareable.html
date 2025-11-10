@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Game</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        media="screen,projection">
+</head>
+<body class="teal">
+<main class="container">
+  <h1>Poker Chip Optimizer</h1>
+  <hr/>
+  <textarea id="output">
+
+  </textarea>
+</main>
+</body>
+<script>
+    var data = {};
+
+    function loadDataFromParam() {
+          var encoded = window.location.hash.slice(1);
+          if(encoded) {
+            var decoded = atob(encoded);
+            data = JSON.parse(decoded);
+            document.getElementById('output').value = JSON.stringify(data, null, 2);
+          }
+    }
+
+    function writeDataToParam() {
+      window.location.hash = "#" + btoa(JSON.stringify(data));
+    }
+
+    document.getElementById('output').addEventListener('blur', (it) => {
+      try {
+        data = JSON.parse(it.target.value);
+        writeDataToParam();
+      } catch (e) {
+        alert('Invalid JSON: ' + e.message);
+      }
+    });
+
+    loadDataFromParam()
+
+</script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var elems = document.querySelectorAll('select');
+    var instances = M.FormSelect.init(elems);
+  });
+</script>
+</html>
