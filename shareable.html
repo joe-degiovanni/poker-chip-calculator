@@ -1,216 +1,299 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Game</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--Import Google Icon Font-->
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <title>Game</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-    <!-- Compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
-          media="screen,projection">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        media="screen,projection">
 </head>
 <body class="teal">
 <main class="container">
-    <h1>Poker Chip Optimizer</h1>
-    <hr/>
-    <textarea id="output">
-
-  </textarea>
-    <table id="test">
-        <tr>
-            <th>Chip Color</th>
-            <th>Total Count</th>
-            <th>Chip Value</th>
-            <th>Player Start Count</th>
-            <th>Player Start Value</th>
-        </tr>
-        <tr>
-            <td><select name="chipColor">
-                <option value="White" selected>White</option>
-                <option value="Red">Red</option>
-                <option value="Blue">Blue</option>
-                <option value="Green">Green</option>
-                <option value="Black">Black</option>
-                <option value="Purple">Purple</option>
-                <option value="Orange">Orange</option>
-                <option value="Yellow">Yellow</option>
-                <option value="Brown">Brown</option>
-                <option value="Pink">Pink</option>
-                <option value="Gray">Gray</option>
-                <option value="Gold">Gold</option>
-                <option value="Silver">Silver</option>
-            </select></td>
-            <td contenteditable="true">150</td>
-            <td contenteditable="true">$0.25</td>
-            <td contenteditable="true">20</td>
-            <td onclick=reCalculate(this)></td>
-        </tr>
-    </table>
-    <button onclick="addRow()">Add Row</button>
+  <h1>Poker Chip Optimizer</h1>
+  <hr/>
+  <table id="test">
+    <tr>
+      <th>Chip Color</th>
+      <th>Total Count</th>
+      <th>Chip Value</th>
+      <th>Player Start Count</th>
+      <th>Player Start Value</th>
+    </tr>
+    <tr>
+      <td><select name="chipColor">
+        <option value="White" selected>White</option>
+        <option value="Red">Red</option>
+        <option value="Blue">Blue</option>
+        <option value="Green">Green</option>
+        <option value="Black">Black</option>
+        <option value="Purple">Purple</option>
+        <option value="Orange">Orange</option>
+        <option value="Yellow">Yellow</option>
+        <option value="Brown">Brown</option>
+        <option value="Pink">Pink</option>
+        <option value="Gray">Gray</option>
+        <option value="Gold">Gold</option>
+        <option value="Silver">Silver</option>
+      </select></td>
+      <td contenteditable="true">150</td>
+      <td contenteditable="true">$0.25</td>
+      <td contenteditable="true">20</td>
+      <td onclick=reCalculate(this)></td>
+    </tr>
+    <tr>
+      <td><select name="chipColor">
+        <option value="White">White</option>
+        <option value="Red" selected>Red</option>
+        <option value="Blue">Blue</option>
+        <option value="Green">Green</option>
+        <option value="Black">Black</option>
+        <option value="Purple">Purple</option>
+        <option value="Orange">Orange</option>
+        <option value="Yellow">Yellow</option>
+        <option value="Brown">Brown</option>
+        <option value="Pink">Pink</option>
+        <option value="Gray">Gray</option>
+        <option value="Gold">Gold</option>
+        <option value="Silver">Silver</option>
+      </select></td>
+      <td contenteditable="true">150</td>
+      <td contenteditable="true">$0.25</td>
+      <td contenteditable="true">20</td>
+      <td onclick=reCalculate(this)></td>
+    </tr>
+    <tr>
+      <td><select name="chipColor">
+        <option value="White">White</option>
+        <option value="Red">Red</option>
+        <option value="Blue" selected>Blue</option>
+        <option value="Green">Green</option>
+        <option value="Black">Black</option>
+        <option value="Purple">Purple</option>
+        <option value="Orange">Orange</option>
+        <option value="Yellow">Yellow</option>
+        <option value="Brown">Brown</option>
+        <option value="Pink">Pink</option>
+        <option value="Gray">Gray</option>
+        <option value="Gold">Gold</option>
+        <option value="Silver">Silver</option>
+      </select></td>
+      <td contenteditable="true">150</td>
+      <td contenteditable="true">$0.25</td>
+      <td contenteditable="true">20</td>
+      <td onclick=reCalculate(this)></td>
+    </tr>
+    <tr>
+      <td><select name="chipColor">
+        <option value="White">White</option>
+        <option value="Red">Red</option>
+        <option value="Blue">Blue</option>
+        <option value="Green" selected>Green</option>
+        <option value="Black">Black</option>
+        <option value="Purple">Purple</option>
+        <option value="Orange">Orange</option>
+        <option value="Yellow">Yellow</option>
+        <option value="Brown">Brown</option>
+        <option value="Pink">Pink</option>
+        <option value="Gray">Gray</option>
+        <option value="Gold">Gold</option>
+        <option value="Silver">Silver</option>
+      </select></td>
+      <td contenteditable="true">150</td>
+      <td contenteditable="true">$0.25</td>
+      <td contenteditable="true">20</td>
+      <td onclick=reCalculate(this)></td>
+    </tr>
+  </table>
+  <a class="waves-effect waves-teal btn-flat green" onclick="addRow()">Add Row</a>
 </main>
 </body>
 <script>
-    const allChipColors = ['White', 'Red', 'Blue', 'Green', 'Black', 'Purple',
-        'Orange', 'Yellow', 'Brown', 'Pink', 'Gray', 'Gold', 'Silver'];
-    var data = {};
+  const allChipColors = ['White', 'Red', 'Blue', 'Green', 'Black', 'Purple',
+    'Orange', 'Yellow', 'Brown', 'Pink', 'Gray', 'Gold', 'Silver'];
+  var data = {};
 
-    function loadDataFromParam() {
-        var encoded = window.location.hash.slice(1);
-        if (encoded) {
-            var decoded = atob(encoded);
-            data = JSON.parse(decoded);
-            document.getElementById('output').value = JSON.stringify(data, null, 2);
+  function loadDataFromParam() {
+    var encoded = window.location.hash.slice(1);
+    if (encoded) {
+      var decoded = atob(encoded);
+      data = JSON.parse(decoded);
+    }
+  }
+
+  function writeDataToParam() {
+    window.location.hash = "#" + btoa(JSON.stringify(data));
+  }
+
+  function redrawTableFromData() {
+    if(data === undefined || data.length === 0){
+      return;
+    }
+
+    const table = document.getElementById('test');
+    // Clear existing rows except header
+    while (table.rows.length > 1) {
+      table.deleteRow(1);
+    }
+    data.forEach(rowData => {
+      const newRow = table.insertRow();
+      const colorCell = newRow.insertCell(0);
+      const totalCountCell = newRow.insertCell(1);
+      const chipValueCell = newRow.insertCell(2);
+      const playerStartCountCell = newRow.insertCell(3);
+      const playerStartValueCell = newRow.insertCell(4);
+      const deleteRowCell = newRow.insertCell(5);
+      deleteRowCell.innerHTML = '<a class="btn-flat btn-small red" onclick="deleteRow(this.parentNode.parentNode)">Delete</a>';
+
+      // Create select element for chip colors
+      const select = document.createElement("select");
+      select.name = "chipColor";
+      allChipColors.forEach(color => {
+        const option = document.createElement("option");
+        option.value = color;
+        option.textContent = color;
+        if (color === rowData.chipColor) {
+          option.selected = true;
         }
-    }
+        select.appendChild(option);
+      });
+      colorCell.appendChild(select);
 
-    function writeDataToParam() {
-        window.location.hash = "#" + btoa(JSON.stringify(data));
-    }
-
-    function redrawTableFromData() {
-        const table = document.getElementById('test');
-        // Clear existing rows except header
-        while (table.rows.length > 1) {
-            table.deleteRow(1);
-        }
-        data.forEach(rowData => {
-            const newRow = table.insertRow();
-            const colorCell = newRow.insertCell(0);
-            const totalCountCell = newRow.insertCell(1);
-            const chipValueCell = newRow.insertCell(2);
-            const playerStartCountCell = newRow.insertCell(3);
-            const playerStartValueCell = newRow.insertCell(4);
-
-            // Create select element for chip colors
-            const select = document.createElement("select");
-            select.name = "chipColor";
-            allChipColors.forEach(color => {
-                const option = document.createElement("option");
-                option.value = color;
-                option.textContent = color;
-                if (color === rowData.chipColor) {
-                    option.selected = true;
-                }
-                select.appendChild(option);
-            });
-            colorCell.appendChild(select);
-
-            totalCountCell.contentEditable = "true";
-            totalCountCell.textContent = rowData.totalCount;
-            chipValueCell.contentEditable = "true";
-            chipValueCell.textContent = '$' + rowData.chipValue.toFixed(2);
-            playerStartCountCell.contentEditable = "true";
-            playerStartCountCell.textContent = rowData.playerStartCount;
-            playerStartValueCell.setAttribute("onclick", "reCalculate(this)");
-            playerStartValueCell.textContent = '$' + rowData.playerStartValue.toFixed(2);
-        });
-    }
-
-    function reCalculate(cell) {
-        const row = cell.parentNode;
-        const chipValueCell = row.cells[2];
-        const playerStartCountCell = row.cells[3];
-        const chipValue = parseFloat(chipValueCell.textContent.replace('$', ''));
-        const playerStartCount = parseInt(playerStartCountCell.textContent);
-        const playerStartValue = chipValue * playerStartCount;
-        cell.textContent = '$' + playerStartValue.toFixed(2);
-        console.log('reCalculate called', cell.parentNode);
-        data = tableToJson();
-        writeDataToParam();
-    }
-
-    function tableToJson() {
-        const table = document.getElementById('test');
-        const data = [];
-        for (let i = 1; i < table.rows.length; i++) {
-            const row = table.rows[i];
-            const rowData = {
-                chipColor: row.cells[0].querySelector('select').value,
-                totalCount: parseInt(row.cells[1].textContent),
-                chipValue: parseFloat(row.cells[2].textContent.replace('$', '')),
-                playerStartCount: parseInt(row.cells[3].textContent),
-                playerStartValue: parseFloat(row.cells[4].textContent.replace('$', ''))
-            };
-            data.push(rowData);
-        }
-        console.log('tableToJson called', data);
-        return data;
-    }
-
-    document.getElementById('output').addEventListener('blur', (it) => {
-        try {
-            data = JSON.parse(it.target.value);
-            writeDataToParam();
-        } catch (e) {
-            alert('Invalid JSON: ' + e.message);
-        }
+      totalCountCell.contentEditable = "true";
+      totalCountCell.textContent = rowData.totalCount;
+      chipValueCell.contentEditable = "true";
+      chipValueCell.textContent = '$' + rowData.chipValue.toFixed(2);
+      playerStartCountCell.contentEditable = "true";
+      playerStartCountCell.textContent = rowData.playerStartCount;
+      playerStartValueCell.setAttribute("onclick", "reCalculate(this)");
+      playerStartValueCell.textContent = '$' + rowData.playerStartValue.toFixed(2);
     });
+  }
 
-    function getRemainingColors() {
-        const usedColors = tableToJson().map(row => {
-            return {
-                chipColor: row.chipColor
-            };
-        });
-        const remainingColors = allChipColors.filter(color =>
-            !usedColors.some(used => used.chipColor === color)
-        );
-        console.log('getRemainingColors called', remainingColors);
-        return remainingColors;
+  function reCalculate(cell) {
+    const row = cell.parentNode;
+    const chipValueCell = row.cells[2];
+    const playerStartCountCell = row.cells[3];
+    const chipValue = parseFloat(chipValueCell.textContent.replace('$', ''));
+    const playerStartCount = parseInt(playerStartCountCell.textContent);
+    const playerStartValue = chipValue * playerStartCount;
+    cell.textContent = '$' + playerStartValue.toFixed(2);
+    console.log('reCalculate called', cell.parentNode);
+    data = tableToJson();
+    writeDataToParam();
+  }
+
+  function reCalculateAll() {
+    const table = document.getElementById('test');
+    for (let i = 1; i < table.rows.length; i++) {
+      reCalculate(table.rows[i].cells[4]);
     }
+    data = tableToJson();
+    writeDataToParam();
+  }
 
-    function addRow() {
-        const table = document.getElementById('test');
-        const remainingColors = getRemainingColors();
-        if (remainingColors.length === 0) {
-            alert('No more colors available to add.');
-            return;
-        }
-        const newRow = table.insertRow();
-        const colorCell = newRow.insertCell(0);
-        const totalCountCell = newRow.insertCell(1);
-        const chipValueCell = newRow.insertCell(2);
-        const playerStartCountCell = newRow.insertCell(3);
-        const playerStartValueCell = newRow.insertCell(4);
-
-        //colorCell.textContent = remainingColors[0];
-        // Create select element for remaining colors
-        const select = document.createElement("select");
-        select.name = "chipColor";
-        remainingColors.forEach(color => {
-            const option = document.createElement("option");
-            option.value = color;
-            option.textContent = color;
-            select.appendChild(option);
-        });
-        colorCell.appendChild(select);
-
-        totalCountCell.contentEditable = "true";
-        totalCountCell.textContent = "75";
-        chipValueCell.contentEditable = "true";
-        chipValueCell.textContent = "$0.25";
-        playerStartCountCell.contentEditable = "true";
-        playerStartCountCell.textContent = "1";
-        playerStartValueCell.setAttribute("onclick", "reCalculate(this)");
-        playerStartValueCell.textContent = "$0.25";
-
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
+  function tableToJson() {
+    const table = document.getElementById('test');
+    const data = [];
+    for (let i = 1; i < table.rows.length; i++) {
+      const row = table.rows[i];
+      const rowData = {
+        chipColor: row.cells[0].querySelector('select').value,
+        totalCount: parseInt(row.cells[1].textContent),
+        chipValue: parseFloat(row.cells[2].textContent.replace('$', '')),
+        playerStartCount: parseInt(row.cells[3].textContent),
+        playerStartValue: parseFloat(row.cells[4].textContent.replace('$', ''))
+      };
+      data.push(rowData);
     }
+    console.log('tableToJson called', data);
+    return data;
+  }
 
+  function getRemainingColors() {
+    const usedColors = tableToJson().map(row => {
+      return {
+        chipColor: row.chipColor
+      };
+    });
+    const remainingColors = allChipColors.filter(color =>
+      !usedColors.some(used => used.chipColor === color)
+    );
+    console.log('getRemainingColors called', remainingColors);
+    return remainingColors;
+  }
+
+  function addRow() {
+    const table = document.getElementById('test');
+    const remainingColors = getRemainingColors();
+    if (remainingColors.length === 0) {
+      alert('No more colors available to add.');
+      return;
+    }
+    const newRow = table.insertRow();
+    const colorCell = newRow.insertCell(0);
+    const totalCountCell = newRow.insertCell(1);
+    const chipValueCell = newRow.insertCell(2);
+    const playerStartCountCell = newRow.insertCell(3);
+    const playerStartValueCell = newRow.insertCell(4);
+    const deleteRowCell = newRow.insertCell(5);
+    deleteRowCell.innerHTML = '<a class="btn-flat btn-small red" onclick="deleteRow(this.parentNode.parentNode)">Delete</a>';
+
+    //colorCell.textContent = remainingColors[0];
+    // Create select element for remaining colors
+    const select = document.createElement("select");
+    select.name = "chipColor";
+    remainingColors.forEach(color => {
+      const option = document.createElement("option");
+      option.value = color;
+      option.textContent = color;
+      select.appendChild(option);
+    });
+    colorCell.appendChild(select);
+
+    totalCountCell.contentEditable = "true";
+    totalCountCell.textContent = "75";
+    chipValueCell.contentEditable = "true";
+    chipValueCell.textContent = "$0.25";
+    playerStartCountCell.contentEditable = "true";
+    playerStartCountCell.textContent = "1";
+    playerStartValueCell.setAttribute("onclick", "reCalculate(this)");
+    playerStartValueCell.textContent = "$0.25";
+
+    reCalculateAll();
+    writeDataToParam();
+    materializeUpdateSelects();
+    materializeButtons();
+  }
+
+  function deleteRow(row) {
+    const table = document.getElementById('test');
+    table.deleteRow(row.rowIndex);
+    writeDataToParam();
+    reCalculateAll();
+  }
+
+
+  document.addEventListener('DOMContentLoaded',  () => {
     loadDataFromParam();
-    getRemainingColors();
     redrawTableFromData();
+    materializeUpdateSelects();
+  });
+
+  function materializeUpdateSelects() {
+    var elems = document.querySelectorAll('select');
+    M.FormSelect.init(elems);
+  }
+
+  function materializeButtons() {
+    var elems = document.querySelectorAll('button');
+    M.Button.init(elems);
+  }
 
 </script>
 <!-- Compiled and minified JavaScript -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('select');
-        var instances = M.FormSelect.init(elems);
-    });
-</script>
 </html>
