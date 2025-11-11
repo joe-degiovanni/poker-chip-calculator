@@ -15,6 +15,7 @@
 <main class="container">
   <h1>Poker Chip Optimizer</h1>
   <hr/>
+  <a id="viewLink" href="view.html" class="waves-effect waves-teal btn-flat blue">View Only</a>
   <table id="test">
     <tr>
       <th>Chip Color</th>
@@ -121,11 +122,15 @@
     if (encoded) {
       var decoded = atob(encoded);
       data = JSON.parse(decoded);
+      // update view link with new hash
+      document.getElementById('viewLink').href = "view.html" + window.location.hash;
     }
   }
 
   function writeDataToParam() {
-    window.location.hash = "#" + btoa(JSON.stringify(data));
+    const hash = "#" + btoa(JSON.stringify(data));
+    window.location.hash = hash;
+    document.getElementById('viewLink').href = "view.html" + hash;
   }
 
   function redrawTableFromData() {
@@ -171,6 +176,14 @@
       playerStartValueCell.setAttribute("onclick", "reCalculate(this)");
       playerStartValueCell.textContent = '$' + rowData.playerStartValue.toFixed(2);
     });
+
+    // add total row
+    const totalRow = table.insertRow();
+    totalRow.insertCell(0).textContent = 'Total';
+    totalRow.insertCell(1).textContent = data.reduce((sum, row) => sum + row.totalCount, 0);
+    totalRow.insertCell(2).textContent = '$' + data.reduce((sum, row) => sum + row.totalCount * row.chipValue, 0).toFixed(2);
+    totalRow.insertCell(3).textContent = data.reduce((sum, row) => sum + row.playerStartCount, 0);
+    totalRow.insertCell(4).textContent = '$' + data.reduce((sum, row) => sum + row.playerStartCount * row.chipValue, 0).toFixed(2);
   }
 
   function reCalculate(cell) {
@@ -198,7 +211,7 @@
   function tableToJson() {
     const table = document.getElementById('test');
     const data = [];
-    for (let i = 1; i < table.rows.length; i++) {
+    for (let i = 1; i < table.rows.length-1; i++) {
       const row = table.rows[i];
       const rowData = {
         chipColor: row.cells[0].querySelector('select').value,

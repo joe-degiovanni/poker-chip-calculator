@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Game</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+        media="screen,projection">
+</head>
+<body class="teal">
+<main class="container">
+  <h1>Poker Chip Optimizer</h1>
+  <hr/>
+  <a href="edit.html" class="waves-effect waves-teal btn-flat blue">Edit</a>
+  <table id="test">
+    <tr>
+      <th>Chip Color</th>
+      <th>Chip Value</th>
+      <th>Player Start Count</th>
+      <th>Player Start Value</th>
+    </tr>
+  </table>
+</main>
+</body>
+<script>
+  var data = {};
+
+  function loadDataFromParam() {
+    var encoded = window.location.hash.slice(1);
+    if (encoded) {
+      var decoded = atob(encoded);
+      data = JSON.parse(decoded);
+      // update edit link with new hash
+      document.querySelector('a[href="edit.html"]').href = "edit.html" + window.location.hash;
+    }
+  }
+
+
+  function redrawTableFromData() {
+    if(data === undefined || data.length === 0){
+      return;
+    }
+    const table = document.getElementById('test');
+    // Clear existing rows except header
+    while (table.rows.length > 1) {
+      table.deleteRow(1);
+    }
+    data.forEach(rowData => {
+      const newRow = table.insertRow();
+      const colorCell = newRow.insertCell(0);
+      const chipValueCell = newRow.insertCell(1);
+      const playerStartCountCell = newRow.insertCell(2);
+      const playerStartValueCell = newRow.insertCell(3);
+
+      colorCell.textContent = rowData.chipColor;
+      chipValueCell.textContent = '$' + rowData.chipValue.toFixed(2);
+      playerStartCountCell.textContent = rowData.playerStartCount;
+      playerStartValueCell.textContent = '$' + rowData.playerStartValue.toFixed(2);
+    });
+
+    // add total row
+    const totalRow = table.insertRow();
+    const totalLabelCell = totalRow.insertCell(0);
+    const blankCell = totalRow.insertCell(1);
+    const totalCountCell = totalRow.insertCell(2);
+    const totalValueCell = totalRow.insertCell(3);
+    totalLabelCell.textContent = 'Total';
+    let totalCount = 0;
+    let totalValue = 0;
+    data.forEach(rowData => {
+      totalCount += rowData.playerStartCount;
+      totalValue += rowData.playerStartValue;
+    });
+    totalCountCell.textContent = totalCount;
+    totalValueCell.textContent = '$' + totalValue.toFixed(2);
+  }
+
+  function reCalculate(cell) {
+    const row = cell.parentNode;
+    const chipValueCell = row.cells[2];
+    const playerStartCountCell = row.cells[3];
+    const chipValue = parseFloat(chipValueCell.textContent.replace('$', ''));
+    const playerStartCount = parseInt(playerStartCountCell.textContent);
+    const playerStartValue = chipValue * playerStartCount;
+    cell.textContent = '$' + playerStartValue.toFixed(2);
+    console.log('reCalculate called', cell.parentNode);
+    data = tableToJson();
+    writeDataToParam();
+  }
+
+  function reCalculateAll() {
+    const table = document.getElementById('test');
+    for (let i = 1; i < table.rows.length; i++) {
+      reCalculate(table.rows[i].cells[4]);
+    }
+  }
+
+  function tableToJson() {
+    const table = document.getElementById('test');
+    const data = [];
+    for (let i = 1; i < table.rows.length; i++) {
+      const row = table.rows[i];
+      const rowData = {
+        chipColor: row.cells[0].querySelector('select').value,
+        totalCount: parseInt(row.cells[1].textContent),
+        chipValue: parseFloat(row.cells[2].textContent.replace('$', '')),
+        playerStartCount: parseInt(row.cells[3].textContent),
+        playerStartValue: parseFloat(row.cells[4].textContent.replace('$', ''))
+      };
+      data.push(rowData);
+    }
+    console.log('tableToJson called', data);
+    return data;
+  }
+
+
+  reCalculateAll();
+
+
+  document.addEventListener('DOMContentLoaded',  () => {
+    loadDataFromParam();
+    redrawTableFromData();
+    materializeUpdateSelects();
+  });
+
+  function materializeUpdateSelects() {
+    var elems = document.querySelectorAll('select');
+    M.FormSelect.init(elems);
+  }
+
+</script>
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</html>
