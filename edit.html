@@ -124,6 +124,14 @@
       data = JSON.parse(decoded);
       // update view link with new hash
       document.getElementById('viewLink').href = "view.html" + window.location.hash;
+    } else {
+      data = [
+        {"chipColor": "White", "totalCount": 150, "chipValue": 0.25, "playerStartCount": 20, "playerStartValue": 5},
+        {"chipColor": "Blue", "totalCount": 150, "chipValue": 0.5, "playerStartCount": 20, "playerStartValue": 10},
+        {"chipColor": "Red", "totalCount": 75, "chipValue": 5, "playerStartCount": 5, "playerStartValue": 25},
+        {"chipColor": "Black", "totalCount": 75, "chipValue": 10, "playerStartCount": 1, "playerStartValue": 10}
+      ];
+      writeDataToParam();
     }
   }
 
@@ -134,7 +142,7 @@
   }
 
   function redrawTableFromData() {
-    if(data === undefined || data.length === 0){
+    if (data === undefined || data.length === 0) {
       return;
     }
 
@@ -211,7 +219,7 @@
   function tableToJson() {
     const table = document.getElementById('test');
     const data = [];
-    for (let i = 1; i < table.rows.length-1; i++) {
+    for (let i = 1; i < table.rows.length - 1; i++) {
       const row = table.rows[i];
       const rowData = {
         chipColor: row.cells[0].querySelector('select').value,
@@ -290,7 +298,7 @@
   }
 
 
-  document.addEventListener('DOMContentLoaded',  () => {
+  document.addEventListener('DOMContentLoaded', () => {
     loadDataFromParam();
     redrawTableFromData();
     materializeUpdateSelects();

@@ -36,9 +36,23 @@
       data = JSON.parse(decoded);
       // update edit link with new hash
       document.querySelector('a[href="edit.html"]').href = "edit.html" + window.location.hash;
+    } else {
+      data = [
+        {"chipColor": "White", "totalCount": 150, "chipValue": 0.25, "playerStartCount": 20, "playerStartValue": 5},
+        {"chipColor": "Blue", "totalCount": 150, "chipValue": 0.5, "playerStartCount": 20, "playerStartValue": 10},
+        {"chipColor": "Red", "totalCount": 75, "chipValue": 5, "playerStartCount": 5, "playerStartValue": 25},
+        {"chipColor": "Black", "totalCount": 75, "chipValue": 10, "playerStartCount": 1, "playerStartValue": 10}
+      ];
+      redrawTableFromData();
+      writeDataToParam();
     }
   }
 
+  function writeDataToParam() {
+    const hash = "#" + btoa(JSON.stringify(data));
+    window.location.hash = hash;
+    document.getElementById('viewLink').href = "view.html" + hash;
+  }
 
   function redrawTableFromData() {
     if(data === undefined || data.length === 0){
@@ -65,61 +79,13 @@
     // add total row
     const totalRow = table.insertRow();
     const totalLabelCell = totalRow.insertCell(0);
-    const blankCell = totalRow.insertCell(1);
-    const totalCountCell = totalRow.insertCell(2);
-    const totalValueCell = totalRow.insertCell(3);
+    totalLabelCell.colSpan = 2;
     totalLabelCell.textContent = 'Total';
-    let totalCount = 0;
-    let totalValue = 0;
-    data.forEach(rowData => {
-      totalCount += rowData.playerStartCount;
-      totalValue += rowData.playerStartValue;
-    });
-    totalCountCell.textContent = totalCount;
-    totalValueCell.textContent = '$' + totalValue.toFixed(2);
+    const totalCountCell = totalRow.insertCell(1);
+    const totalValueCell = totalRow.insertCell(2);
+    totalCountCell.textContent = data.map(row => row.playerStartCount).reduce((a, b) => a + b, 0);
+    totalValueCell.textContent = '$' + data.map(row => row.playerStartValue).reduce((a, b) => a + b, 0).toFixed(2);
   }
-
-  function reCalculate(cell) {
-    const row = cell.parentNode;
-    const chipValueCell = row.cells[2];
-    const playerStartCountCell = row.cells[3];
-    const chipValue = parseFloat(chipValueCell.textContent.replace('$', ''));
-    const playerStartCount = parseInt(playerStartCountCell.textContent);
-    const playerStartValue = chipValue * playerStartCount;
-    cell.textContent = '$' + playerStartValue.toFixed(2);
-    console.log('reCalculate called', cell.parentNode);
-    data = tableToJson();
-    writeDataToParam();
-  }
-
-  function reCalculateAll() {
-    const table = document.getElementById('test');
-    for (let i = 1; i < table.rows.length; i++) {
-      reCalculate(table.rows[i].cells[4]);
-    }
-  }
-
-  function tableToJson() {
-    const table = document.getElementById('test');
-    const data = [];
-    for (let i = 1; i < table.rows.length; i++) {
-      const row = table.rows[i];
-      const rowData = {
-        chipColor: row.cells[0].querySelector('select').value,
-        totalCount: parseInt(row.cells[1].textContent),
-        chipValue: parseFloat(row.cells[2].textContent.replace('$', '')),
-        playerStartCount: parseInt(row.cells[3].textContent),
-        playerStartValue: parseFloat(row.cells[4].textContent.replace('$', ''))
-      };
-      data.push(rowData);
-    }
-    console.log('tableToJson called', data);
-    return data;
-  }
-
-
-  reCalculateAll();
-
 
   document.addEventListener('DOMContentLoaded',  () => {
     loadDataFromParam();
