@@ -154,12 +154,6 @@
     data.forEach(rowData => {
       const newRow = table.insertRow();
       const colorCell = newRow.insertCell(0);
-      const totalCountCell = newRow.insertCell(1);
-      const chipValueCell = newRow.insertCell(2);
-      const playerStartCountCell = newRow.insertCell(3);
-      const playerStartValueCell = newRow.insertCell(4);
-      const deleteRowCell = newRow.insertCell(5);
-      deleteRowCell.innerHTML = '<a class="btn-flat btn-small red" onclick="deleteRow(this.parentNode.parentNode)">Delete</a>';
 
       // Create select element for chip colors
       const select = document.createElement("select");
@@ -175,14 +169,20 @@
       });
       colorCell.appendChild(select);
 
+      const totalCountCell = newRow.insertCell(1);
       totalCountCell.contentEditable = "true";
       totalCountCell.textContent = rowData.totalCount;
+      const chipValueCell = newRow.insertCell(2);
       chipValueCell.contentEditable = "true";
       chipValueCell.textContent = '$' + rowData.chipValue.toFixed(2);
+      const playerStartCountCell = newRow.insertCell(3);
       playerStartCountCell.contentEditable = "true";
       playerStartCountCell.textContent = rowData.playerStartCount;
+      const playerStartValueCell = newRow.insertCell(4);
       playerStartValueCell.setAttribute("onclick", "reCalculate(this)");
       playerStartValueCell.textContent = '$' + rowData.playerStartValue.toFixed(2);
+      const deleteRowCell = newRow.insertCell(5);
+      deleteRowCell.innerHTML = '<a class="btn-flat btn-small red" onclick="deleteRow(this.parentNode.parentNode)">Delete</a>';
     });
 
     // add total row
@@ -202,7 +202,6 @@
     const playerStartCount = parseInt(playerStartCountCell.textContent);
     const playerStartValue = chipValue * playerStartCount;
     cell.textContent = '$' + playerStartValue.toFixed(2);
-    console.log('reCalculate called', cell.parentNode);
     data = tableToJson();
     writeDataToParam();
   }
@@ -230,7 +229,6 @@
       };
       data.push(rowData);
     }
-    console.log('tableToJson called', data);
     return data;
   }
 
