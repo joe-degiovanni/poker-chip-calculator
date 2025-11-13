@@ -16,121 +16,47 @@
   <h1>Poker Chip Optimizer</h1>
   <hr/>
   <a id="viewLink" href="view.html" class="waves-effect waves-teal btn-flat blue">View Only</a>
-  <table id="test">
-    <tr>
-      <th>Chip Color</th>
-      <th>Total Count</th>
-      <th>Chip Value</th>
-      <th>Player Start Count</th>
-      <th>Player Start Value</th>
-    </tr>
-    <tr>
-      <td><select name="chipColor">
-        <option value="White" selected>White</option>
-        <option value="Red">Red</option>
-        <option value="Blue">Blue</option>
-        <option value="Green">Green</option>
-        <option value="Black">Black</option>
-        <option value="Purple">Purple</option>
-        <option value="Orange">Orange</option>
-        <option value="Yellow">Yellow</option>
-        <option value="Brown">Brown</option>
-        <option value="Pink">Pink</option>
-        <option value="Gray">Gray</option>
-        <option value="Gold">Gold</option>
-        <option value="Silver">Silver</option>
-      </select></td>
-      <td contenteditable="true">150</td>
-      <td contenteditable="true">$0.25</td>
-      <td contenteditable="true">20</td>
-      <td onclick=reCalculate(this)></td>
-    </tr>
-    <tr>
-      <td><select name="chipColor">
-        <option value="White">White</option>
-        <option value="Red" selected>Red</option>
-        <option value="Blue">Blue</option>
-        <option value="Green">Green</option>
-        <option value="Black">Black</option>
-        <option value="Purple">Purple</option>
-        <option value="Orange">Orange</option>
-        <option value="Yellow">Yellow</option>
-        <option value="Brown">Brown</option>
-        <option value="Pink">Pink</option>
-        <option value="Gray">Gray</option>
-        <option value="Gold">Gold</option>
-        <option value="Silver">Silver</option>
-      </select></td>
-      <td contenteditable="true">150</td>
-      <td contenteditable="true">$0.25</td>
-      <td contenteditable="true">20</td>
-      <td onclick=reCalculate(this)></td>
-    </tr>
-    <tr>
-      <td><select name="chipColor">
-        <option value="White">White</option>
-        <option value="Red">Red</option>
-        <option value="Blue" selected>Blue</option>
-        <option value="Green">Green</option>
-        <option value="Black">Black</option>
-        <option value="Purple">Purple</option>
-        <option value="Orange">Orange</option>
-        <option value="Yellow">Yellow</option>
-        <option value="Brown">Brown</option>
-        <option value="Pink">Pink</option>
-        <option value="Gray">Gray</option>
-        <option value="Gold">Gold</option>
-        <option value="Silver">Silver</option>
-      </select></td>
-      <td contenteditable="true">150</td>
-      <td contenteditable="true">$0.25</td>
-      <td contenteditable="true">20</td>
-      <td onclick=reCalculate(this)></td>
-    </tr>
-    <tr>
-      <td><select name="chipColor">
-        <option value="White">White</option>
-        <option value="Red">Red</option>
-        <option value="Blue">Blue</option>
-        <option value="Green" selected>Green</option>
-        <option value="Black">Black</option>
-        <option value="Purple">Purple</option>
-        <option value="Orange">Orange</option>
-        <option value="Yellow">Yellow</option>
-        <option value="Brown">Brown</option>
-        <option value="Pink">Pink</option>
-        <option value="Gray">Gray</option>
-        <option value="Gold">Gold</option>
-        <option value="Silver">Silver</option>
-      </select></td>
-      <td contenteditable="true">150</td>
-      <td contenteditable="true">$0.25</td>
-      <td contenteditable="true">20</td>
-      <td onclick=reCalculate(this)></td>
-    </tr>
-  </table>
+  <table id="test"></table>
   <a class="waves-effect waves-teal btn-flat green" onclick="addRow()">Add Row</a>
 </main>
 </body>
 <script>
+  class ChipRow {
+    constructor(chipColor, totalCount, chipValue, playerStartCount) {
+      this.chipColor = chipColor;
+      this.totalCount = totalCount;
+      this.chipValue = chipValue;
+      this.playerStartCount = playerStartCount;
+      this.playerStartValue = this.playerStartCount * this.chipValue;
+    }
+  }
+
   const allChipColors = ['White', 'Red', 'Blue', 'Green', 'Black', 'Purple',
     'Orange', 'Yellow', 'Brown', 'Pink', 'Gray', 'Gold', 'Silver'];
-  var data = {};
+  var data = [];
+  const defaultData = [
+    new ChipRow("White", 150, 0.25, 20),
+    new ChipRow("Blue", 150, 0.5, 20),
+    new ChipRow("Red", 75, 5, 5),
+    new ChipRow("Black", 75, 10, 1)
+  ];
 
   function loadDataFromParam() {
     var encoded = window.location.hash.slice(1);
     if (encoded) {
       var decoded = atob(encoded);
-      data = JSON.parse(decoded);
+      const rows = JSON.parse(decoded);
+      data = rows.map(row => new ChipRow(
+        row.chipColor,
+        row.totalCount,
+        row.chipValue,
+        row.playerStartCount
+      ));
       // update view link with new hash
       document.getElementById('viewLink').href = "view.html" + window.location.hash;
     } else {
-      data = [
-        {"chipColor": "White", "totalCount": 150, "chipValue": 0.25, "playerStartCount": 20, "playerStartValue": 5},
-        {"chipColor": "Blue", "totalCount": 150, "chipValue": 0.5, "playerStartCount": 20, "playerStartValue": 10},
-        {"chipColor": "Red", "totalCount": 75, "chipValue": 5, "playerStartCount": 5, "playerStartValue": 25},
-        {"chipColor": "Black", "totalCount": 75, "chipValue": 10, "playerStartCount": 1, "playerStartValue": 10}
-      ];
+      // default data
+      data = defaultData;
       writeDataToParam();
     }
   }
@@ -142,16 +68,27 @@
   }
 
   function redrawTableFromData() {
-    if (data === undefined || data.length === 0) {
-      return;
-    }
-
     const table = document.getElementById('test');
-    // Clear existing rows except header
-    while (table.rows.length > 1) {
-      table.deleteRow(1);
+    table.innerHTML = `
+      <tr>
+        <th>Chip Color</th>
+        <th>Total Count</th>
+        <th>Chip Value</th>
+        <th>Player Start Count</th>
+        <th>Player Start Value</th>
+        <th>Actions</th>
+      </tr>
+    `;
+    if (data === undefined || data.length === 0) {
+      data = defaultData;
     }
     data.forEach(rowData => {
+      const chipRow = new ChipRow(
+        rowData.chipColor,
+        rowData.totalCount,
+        rowData.chipValue,
+        rowData.playerStartCount
+      );
       const newRow = table.insertRow();
       const colorCell = newRow.insertCell(0);
 
@@ -162,7 +99,7 @@
         const option = document.createElement("option");
         option.value = color;
         option.textContent = color;
-        if (color === rowData.chipColor) {
+        if (color === chipRow.chipColor) {
           option.selected = true;
         }
         select.appendChild(option);
@@ -171,16 +108,18 @@
 
       const totalCountCell = newRow.insertCell(1);
       totalCountCell.contentEditable = "true";
-      totalCountCell.textContent = rowData.totalCount;
+      totalCountCell.textContent = chipRow.totalCount;
+      totalCountCell.onblur = () => redrawIfChanged();
       const chipValueCell = newRow.insertCell(2);
       chipValueCell.contentEditable = "true";
-      chipValueCell.textContent = '$' + rowData.chipValue.toFixed(2);
+      chipValueCell.textContent = '$' + chipRow.chipValue.toFixed(2);
+      chipValueCell.onblur = () => redrawIfChanged();
       const playerStartCountCell = newRow.insertCell(3);
       playerStartCountCell.contentEditable = "true";
-      playerStartCountCell.textContent = rowData.playerStartCount;
+      playerStartCountCell.textContent = chipRow.playerStartCount;
+      playerStartCountCell.onblur = () => redrawIfChanged();
       const playerStartValueCell = newRow.insertCell(4);
-      playerStartValueCell.setAttribute("onclick", "reCalculate(this)");
-      playerStartValueCell.textContent = '$' + rowData.playerStartValue.toFixed(2);
+      playerStartValueCell.textContent = '$' + chipRow.playerStartValue;
       const deleteRowCell = newRow.insertCell(5);
       deleteRowCell.innerHTML = '<a class="btn-flat btn-small red" onclick="deleteRow(this.parentNode.parentNode)">Delete</a>';
     });
@@ -191,28 +130,8 @@
     totalRow.insertCell(1).textContent = data.reduce((sum, row) => sum + row.totalCount, 0);
     totalRow.insertCell(2).textContent = '$' + data.reduce((sum, row) => sum + row.totalCount * row.chipValue, 0).toFixed(2);
     totalRow.insertCell(3).textContent = data.reduce((sum, row) => sum + row.playerStartCount, 0);
-    totalRow.insertCell(4).textContent = '$' + data.reduce((sum, row) => sum + row.playerStartCount * row.chipValue, 0).toFixed(2);
-  }
-
-  function reCalculate(cell) {
-    const row = cell.parentNode;
-    const chipValueCell = row.cells[2];
-    const playerStartCountCell = row.cells[3];
-    const chipValue = parseFloat(chipValueCell.textContent.replace('$', ''));
-    const playerStartCount = parseInt(playerStartCountCell.textContent);
-    const playerStartValue = chipValue * playerStartCount;
-    cell.textContent = '$' + playerStartValue.toFixed(2);
-    data = tableToJson();
-    writeDataToParam();
-  }
-
-  function reCalculateAll() {
-    const table = document.getElementById('test');
-    for (let i = 1; i < table.rows.length; i++) {
-      reCalculate(table.rows[i].cells[4]);
-    }
-    data = tableToJson();
-    writeDataToParam();
+    totalRow.insertCell(4).textContent = '$' + data.reduce((sum, row) => sum + row.playerStartValue, 0);
+    M.AutoInit();
   }
 
   function tableToJson() {
@@ -220,13 +139,12 @@
     const data = [];
     for (let i = 1; i < table.rows.length - 1; i++) {
       const row = table.rows[i];
-      const rowData = {
-        chipColor: row.cells[0].querySelector('select').value,
-        totalCount: parseInt(row.cells[1].textContent),
-        chipValue: parseFloat(row.cells[2].textContent.replace('$', '')),
-        playerStartCount: parseInt(row.cells[3].textContent),
-        playerStartValue: parseFloat(row.cells[4].textContent.replace('$', ''))
-      };
+      const rowData = new ChipRow(
+        row.cells[0].querySelector('select').value,
+        parseInt(row.cells[1].textContent),
+        parseFloat(row.cells[2].textContent.replace('$', '')),
+        parseInt(row.cells[3].textContent)
+      );
       data.push(rowData);
     }
     return data;
@@ -246,70 +164,30 @@
   }
 
   function addRow() {
-    const table = document.getElementById('test');
-    const remainingColors = getRemainingColors();
-    if (remainingColors.length === 0) {
-      alert('No more colors available to add.');
-      return;
-    }
-    const newRow = table.insertRow();
-    const colorCell = newRow.insertCell(0);
-    const totalCountCell = newRow.insertCell(1);
-    const chipValueCell = newRow.insertCell(2);
-    const playerStartCountCell = newRow.insertCell(3);
-    const playerStartValueCell = newRow.insertCell(4);
-    const deleteRowCell = newRow.insertCell(5);
-    deleteRowCell.innerHTML = '<a class="btn-flat btn-small red" onclick="deleteRow(this.parentNode.parentNode)">Delete</a>';
-
-    //colorCell.textContent = remainingColors[0];
-    // Create select element for remaining colors
-    const select = document.createElement("select");
-    select.name = "chipColor";
-    remainingColors.forEach(color => {
-      const option = document.createElement("option");
-      option.value = color;
-      option.textContent = color;
-      select.appendChild(option);
-    });
-    colorCell.appendChild(select);
-
-    totalCountCell.contentEditable = "true";
-    totalCountCell.textContent = "75";
-    chipValueCell.contentEditable = "true";
-    chipValueCell.textContent = "$0.25";
-    playerStartCountCell.contentEditable = "true";
-    playerStartCountCell.textContent = "1";
-    playerStartValueCell.setAttribute("onclick", "reCalculate(this)");
-    playerStartValueCell.textContent = "$0.25";
-
-    reCalculateAll();
+    data.push(
+      new ChipRow(getRemainingColors()[0] || 'White', 100, 1, 10)
+    );
+    redrawTableFromData();
     writeDataToParam();
-    materializeUpdateSelects();
-    materializeButtons();
   }
 
   function deleteRow(row) {
     const table = document.getElementById('test');
     table.deleteRow(row.rowIndex);
+    data = tableToJson();
     writeDataToParam();
-    reCalculateAll();
   }
-
 
   document.addEventListener('DOMContentLoaded', () => {
     loadDataFromParam();
     redrawTableFromData();
-    materializeUpdateSelects();
+    M.AutoInit();
   });
 
-  function materializeUpdateSelects() {
-    var elems = document.querySelectorAll('select');
-    M.FormSelect.init(elems);
-  }
-
-  function materializeButtons() {
-    var elems = document.querySelectorAll('button');
-    M.Button.init(elems);
+  function redrawIfChanged() {
+    data = tableToJson();
+    redrawTableFromData();
+    writeDataToParam();
   }
 
 </script>
